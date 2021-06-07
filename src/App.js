@@ -57,7 +57,7 @@ const del =async (id) =>{
     <div className="container">
       <Header/>
       <Form fun={add} />
-      {task.length > 0 ? (<Tasks task = {task} deletion={del} toggle={toggle}/>) : (<h3>NOTHING HERE</h3>) }
+      {task.length > 0 ? (<Tasks task = {task} deletion={del} toggle={toggle}/>) : (<h3 className='white'>NOTHING HERE</h3>) }
     </div>
   );
 }
