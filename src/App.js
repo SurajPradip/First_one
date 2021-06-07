@@ -1,42 +1,31 @@
 import Header from "./Components/Header";
 import { useState } from "react";
 import Tasks from "./Components/Tasks";
+import Form from "./Components/Form";
 
 function App() {
-  const [task , edit] = useState([
-    {
-        id : 1,
-        work : "Create react application Cache",
-        date : "December 15",
-        stat : true,
-    },
-    {
-        id : 2,
-        work : "Watch film",
-        date : "February 23",
-        stat : false,
-    },
-    {
-        id : 3,
-        work : "Existancial crisis time",
-        date : "May 19",
-        stat : false,
-    },
-    {
-        id : 4,
-        work : "Go for swimming",
-        date : "November 30",
-        stat : true,
-    },
-])
+  const [task , edit] = useState([])
+
+const add = (inp) =>{
+  const id = Math.floor(Math.random() * 10000 + 1)
+  const newTask = {id , ...inp}
+  edit([...task , newTask])
+}
+
+const toggle = (id) =>{
+  edit(task.map((task) => task.id === id ? {...task , stat : !task.stat} : task))
+}
 
 const del = (id) =>{
   edit(task.filter((task) => task.id !== id))
 }
+
+
   return (
     <div className="container">
-      <Header />
-      {Tasks.length > 0 ? (<Tasks task = {task} deletion={del}/>) : ("NOTHING HERE") }
+      <Header/>
+      <Form fun={add} />
+      {task.length > 0 ? (<Tasks task = {task} deletion={del} toggle={toggle}/>) : (<h3>NOTHING HERE</h3>) }
     </div>
   );
 }

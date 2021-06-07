@@ -1,6 +1,6 @@
 import Button from "./Button"
 
-const Header = (testing) => {
+const Header = () => {
     return (
         <div>
             <header className='header'>
