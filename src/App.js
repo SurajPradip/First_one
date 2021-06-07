@@ -1,22 +1,54 @@
 import Header from "./Components/Header";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import Tasks from "./Components/Tasks";
 import Form from "./Components/Form";
 
 function App() {
   const [task , edit] = useState([])
 
-const add = (inp) =>{
-  const id = Math.floor(Math.random() * 10000 + 1)
-  const newTask = {id , ...inp}
+const add = async (inp) =>{
+ const res = await fetch("http://localhost:8000/tasks" , {
+   method : "POST",
+   headers : { 'Content-type' : 'application/json'},
+   body : JSON.stringify(inp)
+ })
+ const newTask = await res.json()
+  
   edit([...task , newTask])
 }
 
-const toggle = (id) =>{
-  edit(task.map((task) => task.id === id ? {...task , stat : !task.stat} : task))
-}
+useEffect(() =>{
+  const func = async() =>{
+    const data = await fetch("http://localhost:8000/tasks")
+    const oldTasks = await data.json()
+    edit(oldTasks)
+  }
 
-const del = (id) =>{
+  func()
+},[])
+
+const toggle = async (id) =>{
+  const getToggle = async (id) => {
+
+    const res = await fetch(`http://localhost:8000/tasks/${id}`)
+    const data = await res.json()
+    return data;
+    }
+    
+     const changableElement = await getToggle(id)
+     const changedElement = {...changableElement , stat : !changableElement.stat}
+      await fetch(`http://localhost:8000/tasks/${id}`,{
+       method : 'PUT',
+       headers : {'Content-type' : 'application/json'},
+       body : JSON.stringify(changedElement)
+     })
+    edit(task.map((task) => task.id === id ? {...task , stat : !task.stat} : task))
+  }
+
+const del =async (id) =>{
+  await fetch(`http://localhost:8000/tasks/${id}`,{
+    method : "DELETE"
+  })
   edit(task.filter((task) => task.id !== id))
 }
 
